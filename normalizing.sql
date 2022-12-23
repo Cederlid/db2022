@@ -42,12 +42,47 @@ SET @id = 0;
 UPDATE School SET SchoolId = (SELECT @id := @id + 1);
 ALTER TABLE School ADD PRIMARY KEY(SchoolId);
 
-
+DROP TABLE IF EXISTS StudentSchool;
 CREATE TABLE StudentSchool AS SELECT DISTINCT UNF.Id AS StudentId, School.SchoolId
 FROM UNF INNER JOIN School ON UNF.School = School.Name;
 ALTER TABLE StudentSchool MODIFY COLUMN StudentId INT;
 ALTER TABLE StudentSchool MODIFY COLUMN SchoolId INT;
 ALTER TABLE StudentSchool ADD PRIMARY KEY(StudentId, SchoolId);
+
+
+
+DROP TABLE IF EXISTS Hobby;
+CREATE TABLE Hobby(
+HobbyId INT NOT NULL AUTO_INCREMENT,
+Hobby VARCHAR (100) NOT NULL,
+CONSTRAINT PRIMARY KEY(HobbyId)
+)ENGINE = INNODB;
+INSERT INTO Hobby(Hobby)
+ SELECT  trim(SUBSTRING_INDEX(Hobbies, ",", 1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing'
+UNION
+SELECT trim(substring_index(substring_index(Hobbies, ",", -2),"," ,1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing'
+UNION
+SELECT trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing';
+
+
+DROP TABLE IF EXISTS StudentHobby;
+CREATE TABLE StudentHobby(
+HobbyId INT NOT NULL AUTO_INCREMENT,
+StudentId INT NOT NULL,
+CONSTRAINT PRIMARY KEY(HobbyId, StudentId)
+);
+INSERT INTO StudentHobby(StudentId, HobbyId)
+SELECT StudentIdHobbyName.Id, Hobby.HobbyId FROM
+( SELECT Id, trim(SUBSTRING_INDEX(Hobbies, ",", 1)) AS Hobby FROM UNF
+UNION
+SELECT  Id, trim(substring_index(substring_index(Hobbies, ",", -2),"," ,1)) AS Hobby FROM UNF
+UNION
+SELECT Id, trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF) AS StudentIdHobbyName
+JOIN Hobby ON Hobby.Hobby=StudentIdHobbyName.Hobby;
+
+
+
+
 
 
 
