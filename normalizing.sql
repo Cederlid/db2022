@@ -88,6 +88,7 @@ UNION
 SELECT trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing';
 
 
+
 DROP TABLE IF EXISTS StudentHobby;
 CREATE TABLE StudentHobby(
 HobbyId INT NOT NULL AUTO_INCREMENT,
@@ -105,6 +106,18 @@ JOIN Hobby ON Hobby.Hobby=StudentIdHobbyName.Hobby;
 
 
 
+DROP TABLE IF EXISTS Grade;
+CREATE TABLE Grade (
+StudentId INT NOT NULL,
+StudentGrade VARCHAR (150) NOT NULL
+);
+INSERT INTO Grade (StudentId, StudentGrade) SELECT UNF.Id as StudentId, "Awesome" AS StudentGrade FROM UNF WHERE Grade LIKE "%som%"
+UNION SELECT UNF.Id as StudentId, "First Class" AS StudentGrade FROM UNF WHERE Grade LIKE "%class"
+UNION SELECT UNF.Id as StudentId, "Admirable" AS StudentGrade FROM UNF WHERE Grade = "Admirablçe"
+UNION SELECT UNF.Id as StudentId, "Gorgeous" AS StudentGrade FROM UNF WHERE Grade LIKE "Gorg%"
+UNION SELECT UNF.Id as StudentId, "Best" AS StudentGrade FROM UNF WHERE Grade = "Best"
+UNION SELECT UNF.Id as StudentId, "Excellent" AS StudentGrade FROM UNF WHERE Grade LIKE "%ellent"
+UNION SELECT UNF.Id as StudentId, "Profound" AS StudentGrade FROM UNF WHERE Grade = "Profound";
 
 
 
