@@ -122,9 +122,8 @@ UNION SELECT UNF.Id as StudentId, "Profound" AS StudentGrade FROM UNF WHERE Grad
 
 
 DROP TABLE IF EXISTS City;
-CREATE TABLE City AS SELECT DISTINCT 0 AS CityId, City FROM UNF;
+CREATE TABLE City AS SELECT DISTINCT 0 AS CityId, City, Id AS StudentId FROM UNF;
 SET @id = 0;
 UPDATE City SET CityId = (SELECT @id := @id + 1);
 ALTER TABLE City ADD PRIMARY KEY(CityId);
-
 
