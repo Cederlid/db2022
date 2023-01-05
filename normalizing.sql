@@ -113,7 +113,7 @@ StudentGrade VARCHAR (150) NOT NULL
 );
 INSERT INTO Grade (StudentId, StudentGrade) SELECT UNF.Id as StudentId, "Awesome" AS StudentGrade FROM UNF WHERE Grade LIKE "%som%"
 UNION SELECT UNF.Id as StudentId, "First Class" AS StudentGrade FROM UNF WHERE Grade LIKE "%class"
-UNION SELECT UNF.Id as StudentId, "Admirable" AS StudentGrade FROM UNF WHERE Grade = "Admirablçe"
+UNION SELECT UNF.Id as StudentId, "Admirable" AS StudentGrade FROM UNF WHERE Grade = "Admirle"
 UNION SELECT UNF.Id as StudentId, "Gorgeous" AS StudentGrade FROM UNF WHERE Grade LIKE "Gorg%"
 UNION SELECT UNF.Id as StudentId, "Best" AS StudentGrade FROM UNF WHERE Grade = "Best"
 UNION SELECT UNF.Id as StudentId, "Excellent" AS StudentGrade FROM UNF WHERE Grade LIKE "%ellent"
