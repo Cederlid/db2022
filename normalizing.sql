@@ -69,6 +69,9 @@ WHERE MobilePhone1 IS NOT NULL AND MobilePhone1 != ''
 UNION SELECT ID As StudentId, "Mobile" AS Type, MobilePhone2 as Number FROM UNF
 WHERE MobilePhone2 IS NOT NULL AND MobilePhone2 != ''
 ;
+
+
+
 DROP VIEW IF EXISTS PhoneList;
 CREATE VIEW PhoneList AS SELECT CONCAT(FirstName, ' ', LastName) as Name, group_concat(Number) AS Numbers FROM Phone JOIN Student using(StudentId) GROUP BY StudentId;
 
@@ -77,10 +80,10 @@ CREATE VIEW PhoneList AS SELECT CONCAT(FirstName, ' ', LastName) as Name, group_
 DROP TABLE IF EXISTS Hobby;
 CREATE TABLE Hobby(
 HobbyId INT NOT NULL AUTO_INCREMENT,
-Hobby VARCHAR (100) NOT NULL,
+Name VARCHAR (100) NOT NULL,
 CONSTRAINT PRIMARY KEY(HobbyId)
 )ENGINE = INNODB;
-INSERT INTO Hobby(Hobby)
+INSERT INTO Hobby(Name)
  SELECT  trim(SUBSTRING_INDEX(Hobbies, ",", 1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing'
 UNION
 SELECT trim(substring_index(substring_index(Hobbies, ",", -2),"," ,1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing'
@@ -88,10 +91,9 @@ UNION
 SELECT trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing';
 
 
-
 DROP TABLE IF EXISTS StudentHobby;
 CREATE TABLE StudentHobby(
-HobbyId INT NOT NULL AUTO_INCREMENT,
+HobbyId INT NOT NULL ,
 StudentId INT NOT NULL,
 CONSTRAINT PRIMARY KEY(HobbyId, StudentId)
 );
@@ -102,23 +104,24 @@ UNION
 SELECT  Id, trim(substring_index(substring_index(Hobbies, ",", -2),"," ,1)) AS Hobby FROM UNF
 UNION
 SELECT Id, trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF) AS StudentIdHobbyName
-JOIN Hobby ON Hobby.Hobby=StudentIdHobbyName.Hobby;
-
+JOIN Hobby ON Hobby.Name = StudentIdHobbyName.Hobby;
 
 
 DROP TABLE IF EXISTS Grade;
-CREATE TABLE Grade (
-StudentId INT NOT NULL,
-StudentGrade VARCHAR (150) NOT NULL
-);
-INSERT INTO Grade (StudentId, StudentGrade) SELECT UNF.Id as StudentId, "Awesome" AS StudentGrade FROM UNF WHERE Grade LIKE "%som%"
-UNION SELECT UNF.Id as StudentId, "First Class" AS StudentGrade FROM UNF WHERE Grade LIKE "%class"
-UNION SELECT UNF.Id as StudentId, "Admirable" AS StudentGrade FROM UNF WHERE Grade = "Admirable"
-UNION SELECT UNF.Id as StudentId, "Gorgeous" AS StudentGrade FROM UNF WHERE Grade LIKE "Gorg%"
-UNION SELECT UNF.Id as StudentId, "Best" AS StudentGrade FROM UNF WHERE Grade = "Best"
-UNION SELECT UNF.Id as StudentId, "Excellent" AS StudentGrade FROM UNF WHERE Grade LIKE "%ellent"
-UNION SELECT UNF.Id as StudentId, "Profound" AS StudentGrade FROM UNF WHERE Grade = "Profound";
-
+CREATE TABLE Grade AS SELECT 0 as GradeId, Grade AS Name FROM (
+    SELECT DISTINCT CASE WHEN Grade LIKE "%som%" THEN "Awesome"
+                WHEN Grade LIKE "%class" THEN "First Class"
+                WHEN Grade = "Admirable" THEN "Admirable"
+                WHEN Grade LIKE "Gorg%" THEN "Gorgeous" 
+                WHEN Grade = "Best" THEN "Best"
+                WHEN Grade LIKE "%ellent" THEN "Excellent"
+                WHEN Grade = "Profound" THEN "Profound" 
+            END AS Grade FROM UNF
+    ) AS Grade WHERE Grade IS NOT NULL;
+SET @id = 0;
+UPDATE Grade SET GradeId = (SELECT @id := @id + 1);
+ALTER TABLE Grade ADD PRIMARY KEY(GradeId);
+ALTER TABLE Student ADD COLUMN GradeId INT NOT NULL;
 
 
 
