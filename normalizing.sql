@@ -1,4 +1,5 @@
 USE iths;
+/* UNF Tabell */
 
 DROP TABLE IF EXISTS UNF;
 CREATE TABLE `UNF` (
@@ -22,6 +23,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
 
+/* Student Tabell */
 
 DROP TABLE IF EXISTS Student;
 CREATE TABLE Student (
@@ -35,12 +37,16 @@ SELECT DISTINCT Id, SUBSTRING_INDEX(Name, ' ', 1), SUBSTRING_INDEX(Name, ' ', -1
 FROM UNF;
 
 
+/* School Tabell */
 
 DROP TABLE IF EXISTS School;
 CREATE TABLE School AS SELECT DISTINCT 0 AS SchoolId, School AS Name, City FROM UNF;
 SET @id = 0;
 UPDATE School SET SchoolId = (SELECT @id := @id + 1);
 ALTER TABLE School ADD PRIMARY KEY(SchoolId);
+
+
+/* StudentSchool Tabell */
 
 DROP TABLE IF EXISTS StudentSchool;
 CREATE TABLE StudentSchool AS SELECT DISTINCT UNF.Id AS StudentId, School.SchoolId
@@ -50,6 +56,7 @@ ALTER TABLE StudentSchool MODIFY COLUMN SchoolId INT;
 ALTER TABLE StudentSchool ADD PRIMARY KEY(StudentId, SchoolId);
 
 
+/* Phone Tabell */
 
 DROP TABLE IF EXISTS Phone;
 CREATE TABLE Phone (
@@ -71,11 +78,13 @@ WHERE MobilePhone2 IS NOT NULL AND MobilePhone2 != ''
 ;
 
 
+/* PhoneList View */
 
 DROP VIEW IF EXISTS PhoneList;
 CREATE VIEW PhoneList AS SELECT CONCAT(FirstName, ' ', LastName) as Name, group_concat(Number) AS Numbers FROM Phone JOIN Student using(StudentId) GROUP BY StudentId;
 
 
+/* School Hobby */
 
 DROP TABLE IF EXISTS Hobby;
 CREATE TABLE Hobby(
@@ -90,6 +99,8 @@ SELECT trim(substring_index(substring_index(Hobbies, ",", -2),"," ,1)) AS Hobby 
 UNION
 SELECT trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF WHERE Hobbies != '' AND Hobbies != 'Nothing';
 
+
+/* School StudentHobby */
 
 DROP TABLE IF EXISTS StudentHobby;
 CREATE TABLE StudentHobby(
@@ -107,6 +118,8 @@ SELECT Id, trim(substring_index(Hobbies, ",", -1)) AS Hobby FROM UNF) AS Student
 JOIN Hobby ON Hobby.Name = StudentIdHobbyName.Hobby;
 
 
+/* School Grade */
+
 DROP TABLE IF EXISTS Grade;
 CREATE TABLE Grade AS SELECT 0 as GradeId, Grade AS Name FROM (
     SELECT DISTINCT CASE WHEN Grade LIKE "%som%" THEN "Awesome"
@@ -122,6 +135,3 @@ SET @id = 0;
 UPDATE Grade SET GradeId = (SELECT @id := @id + 1);
 ALTER TABLE Grade ADD PRIMARY KEY(GradeId);
 ALTER TABLE Student ADD COLUMN GradeId INT NOT NULL;
-
-
-
