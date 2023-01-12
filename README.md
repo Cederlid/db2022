@@ -16,7 +16,7 @@ erDiagram
     Student ||--o{ StudentSchool : attends
     School ||--o{ StudentSchool : enrolls
     Student ||--o{ StudentHobby : has
-    Hobby ||--o{ StudentHobby : involves
+    Hobby ||--|{ StudentHobby : involves
 
     Student{
         int StudentId
