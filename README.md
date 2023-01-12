@@ -10,54 +10,54 @@ I kursen DB2022 på IT-Högskolan skulle vi redovisa på färdigheter i SQL, Nor
 ```mermaid
 
 erDiagram
+
     Student ||--o{ Phone : has
-    Student }|--o| Grade : has
+    Student }|--o{ Grade : has
     Student ||--o{ StudentSchool : attends
     School ||--o{ StudentSchool : enrolls
     Student ||--o{ StudentHobby : has
     Hobby ||--o{ StudentHobby : involves
-    
-    
-    Student {
+
+    Student{
         int StudentId
-        string Name
         int GradeId
+        String FirstName 
+        String LastName
     }
-    
-    Phone {
+
+    School{
+        int SchoolId
+        String Name
+        String City
+    }
+
+    Hobby{
+        int HobbyId
+        String Name
+    }
+
+    Phone{
         int PhoneId
         int StudentId
-        tinyint IsHome 
-        tinyint IsJob
-        tinyint IsMobile
-        string number
+        String Type
+        String Number
     }
-    
-    School {
-        int SchoolId
-        string name
-        string City
-    }
-    
-    StudentSchool {
-        int StudentId
-        int SchoolId
-    }
-    
-    Hobby {
-        int HobbyId
-        string name
-    }
-    StudentHobby {
-        int StudentId
-        int HobbyId
-    }
-    
-    Grade {
+
+    Grade{
         int GradeId
-        string name
+        String Name
     }
-    
+
+    StudentSchool{
+        int StudentId
+        int SchoolId
+    }
+
+    StudentHobby{
+        int StudentId
+        int HobbyId
+    } 
+   
 ```
 
 ## Normalisera databas
