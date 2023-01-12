@@ -6,49 +6,58 @@ I kursen DB2022 på IT-Högskolan skulle vi redovisa på färdigheter i SQL, Nor
 [Mermaid](https://mermaid-js.github.io/mermaid/#/entityRelationshipDiagram) är ett verktyg för att rita diagram i Markdown. Istället för exemplevis Lucidchart, valde vi Mermaid, för att få grafen kodnära.
 
 ## Entity Relationship Diagram
+
 ```mermaid
 
-Student ||--o{ Phone : has
-    Student }|--o{ Grade : has
+erDiagram
+    Student ||--o{ Phone : has
+    Student }|--o| Grade : has
     Student ||--o{ StudentSchool : attends
     School ||--o{ StudentSchool : enrolls
     Student ||--o{ StudentHobby : has
     Hobby ||--o{ StudentHobby : involves
-    Student{
+    
+    
+    Student {
         int StudentId
+        string Name
         int GradeId
-        String FirstName 
-        String LastName
     }
-    School{
-        int SchoolId
-        String Name
-        String City
-    }
-    Hobby{
-        int HobbyId
-        String Name
-    }
-    Phone{
+    
+    Phone {
         int PhoneId
         int StudentId
-        String Type
-        String Number
+        tinyint IsHome 
+        tinyint IsJob
+        tinyint IsMobile
+        string number
     }
-    Grade{
-        int GradeId
-        String Name
+    
+    School {
+        int SchoolId
+        string name
+        string City
     }
-    StudentSchool{
+    
+    StudentSchool {
         int StudentId
         int SchoolId
     }
-    StudentHobby{
+    
+    Hobby {
+        int HobbyId
+        string name
+    }
+    StudentHobby {
         int StudentId
         int HobbyId
     }
-
- 
+    
+    Grade {
+        int GradeId
+        string name
+    }
+    
 ```
 
 ## Normalisera databas
