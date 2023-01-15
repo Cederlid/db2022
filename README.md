@@ -74,7 +74,6 @@ mysql -uiths -piths
 
 ```bash
 gradle run
-gradle check
 ```
 
 
