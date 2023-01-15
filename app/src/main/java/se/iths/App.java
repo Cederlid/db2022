@@ -7,7 +7,7 @@ import java.util.Collection;
 import static se.iths.Constants.*;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         App app = new App();
         try {
             app.load();
@@ -25,7 +25,7 @@ public class App {
 
     private Collection<Student> loadStudents() throws SQLException {
         Collection<Student> students = new ArrayList<>();
-        con = DriverManager.getConnection(JDBC_Connection, JDBC_User, JDBC_PASSWORD);
+        Connection con = DriverManager.getConnection(JDBC_Connection, JDBC_User, JDBC_PASSWORD);
         ResultSet rs = con.createStatement().executeQuery(SQL_SELECT_ALL_STUDENTS);
         while (rs.next()) {
             int studentId = (int) rs.getLong(SQL_COL_STUDENT_ID);
@@ -44,7 +44,7 @@ public class App {
     }
 
     private Collection<School> loadSchools(long studentId) throws SQLException {
-        con = DriverManager.getConnection(JDBC_Connection, JDBC_User, JDBC_PASSWORD);
+        Connection con = DriverManager.getConnection(JDBC_Connection, JDBC_User, JDBC_PASSWORD);
         Collection<School> schools = new ArrayList<>();
         PreparedStatement stmt = con.prepareStatement(SQL_SELECT_SCHOOL_FOR_STUDENTS);
         stmt.setLong(1, studentId);
@@ -56,8 +56,8 @@ public class App {
             School school = new School(schoolId, name, city);
             schools.add(school);
         }
-        stmt.close();
         rs.close();
+        stmt.close();
         con.close();
         return schools;
     }

@@ -14,6 +14,6 @@ public class Constants {
     public final static String SQL_COL_SCHOOL_NAME = "Name";
     public final static String SQL_COL_SCHOOL_ID = "SchoolId";
     public final static String SQL_COL_SCHOOL_CITY = "City";
-    public static Connection con = null;
+
 
 }
